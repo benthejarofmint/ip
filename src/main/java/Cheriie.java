@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Cheriie {
     public static void main(String[] args) {
         String logo = """
@@ -8,15 +10,33 @@ public class Cheriie {
             \\____|_| |_|\\___|_|     |_|_|_|\\___|
            """;
         System.out.println(logo);
-        printHorizontalLines();
-        System.out.println("hello there ! my name is Cheriie !");
-        System.out.println("what may i do for you today?");
-        printHorizontalLines();
-        System.out.println("bye :) hope to hear from you again soon!");
-        printHorizontalLines();
+        printHorizontalLinesBot();
+        System.out.println("\thello there ! my name is Cheriie !");
+        System.out.println("\twhat may i do for you today?");
+        printHorizontalLinesBot();
+
+        // echo function goes here
+        echo();
     }
 
-    public static void printHorizontalLines() {
-        System.out.println("─".repeat(75));
+    public static void printHorizontalLinesBot() {
+        System.out.print("─".repeat(70).indent(3));
+    }
+
+    public static void echo() {
+        while (true) {
+            String line;
+            Scanner in = new Scanner(System.in);
+            line = in.nextLine();
+            if (line.equalsIgnoreCase("bye")) {
+                printHorizontalLinesBot();
+                System.out.println("\tbye :) hope to hear from you again soon!");
+                printHorizontalLinesBot();
+                break;
+            }
+            printHorizontalLinesBot();
+            System.out.print(line.indent(4));
+            printHorizontalLinesBot();
+        }
     }
 }
