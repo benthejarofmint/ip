@@ -27,27 +27,56 @@ public class Cheriie {
     }
 
     public static void echo() {
-        String[] listOfItems = new String[100];
+        Task[] listOfItems = new Task[100];
         int count = 0;
         Scanner in = new Scanner(System.in);
         while (true) {
             String line = in.nextLine();
+            // split output to recognise commands
+            String[] parts = line.split(" ");
+            String command = parts[0];
+
             // if the user wants to quite straight away
-            if (line.equalsIgnoreCase("bye")) {
+            if (command.equalsIgnoreCase("bye")) {
                 printHorizontalLinesBot();
                 System.out.println("\tbye :) hope to hear from you again soon!");
                 printHorizontalLinesBot();
                 break;
             }
-            else if (line.equalsIgnoreCase("list")) {
+
+            // handle "list" command
+            else if (command.equalsIgnoreCase("list")) {
                 printHorizontalLinesBot();
+                System.out.println("\there are the tasks in your current list:");
                 for (int i = 0; i < count; i++) {
-                    System.out.println("\t" + (i + 1) + ". " + listOfItems[i]);
+                    Task t = listOfItems[i];
+                    System.out.println("\t" + (i + 1) + ". [" + t.getStatusIcon() +"] " + t.description);
                 }
                 printHorizontalLinesBot();
-            } else {
-                listOfItems[count] = line;
+            }
+
+            // handle "mark" command
+            else if (command.equalsIgnoreCase("mark")) {
+                int index = Integer.parseInt(parts[1]) - 1;
+                printHorizontalLinesBot();
+                listOfItems[index].markAsDone();
+                printHorizontalLinesBot();
+            }
+
+            // handle "unmark" command
+            else if (command.equalsIgnoreCase("unmark")) {
+                int index = Integer.parseInt(parts[1]) - 1;
+                printHorizontalLinesBot();
+                listOfItems[index].markUndone();
+                printHorizontalLinesBot();
+            }
+
+            // handle adding tasks to the list
+            else {
+                Task t = new Task(line);
+                listOfItems[count] = t;
                 count++;
+
                 printHorizontalLinesBot();
                 System.out.println("\tadded: " + line);
                 printHorizontalLinesBot();
