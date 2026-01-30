@@ -3,8 +3,8 @@ import java.util.Scanner;
 public class Cheriie {
     public static void main(String[] args) {
         greeting();
-        // echo function goes here
-        echo();
+        // main functionality goes here
+        taskManager();
     }
 
     public static void printHorizontalLinesBot() {
@@ -26,41 +26,60 @@ public class Cheriie {
         printHorizontalLinesBot();
     }
 
-    public static void echo() {
+    public static void byeCommand() {
+        printHorizontalLinesBot();
+        System.out.println("\tbye :) hope to hear from you again soon!");
+        printHorizontalLinesBot();
+    }
+
+    public static void listCommand(int count, Task[] listOfItems) {
+        printHorizontalLinesBot();
+        System.out.println("\there are the tasks in your current list:");
+        for (int i = 0; i < count; i++) {
+            Task t = listOfItems[i];
+            System.out.println("\t" + (i + 1) + ". [" + t.getStatusIcon() +"] " + t.description);
+        }
+        printHorizontalLinesBot();
+    }
+
+    public static void taskManager() {
         Task[] listOfItems = new Task[100];
         int count = 0;
         Scanner in = new Scanner(System.in);
         while (true) {
-            String line = in.nextLine();
+            String inputLine = in.nextLine();
             // split output to recognise commands
-            String[] parts = line.split(" ");
+            String[] parts = inputLine.split(" ");
             String command = parts[0];
 
             // if the user wants to quite straight away
             if (command.equalsIgnoreCase("bye")) {
-                printHorizontalLinesBot();
-                System.out.println("\tbye :) hope to hear from you again soon!");
-                printHorizontalLinesBot();
+                byeCommand();
                 break;
             }
 
             // handle "list" command
             else if (command.equalsIgnoreCase("list")) {
-                printHorizontalLinesBot();
-                System.out.println("\there are the tasks in your current list:");
-                for (int i = 0; i < count; i++) {
-                    Task t = listOfItems[i];
-                    System.out.println("\t" + (i + 1) + ". [" + t.getStatusIcon() +"] " + t.description);
-                }
-                printHorizontalLinesBot();
+                listCommand(count, listOfItems);
             }
 
             // handle "mark" command
             else if (command.equalsIgnoreCase("mark")) {
-                int index = Integer.parseInt(parts[1]) - 1;
-                printHorizontalLinesBot();
-                listOfItems[index].markAsDone();
-                printHorizontalLinesBot();
+                try {
+                    int index = Integer.parseInt(parts[1]) - 1;
+                    printHorizontalLinesBot();
+                    listOfItems[index].markAsDone();
+                    printHorizontalLinesBot();
+                } catch (NumberFormatException e) {
+                    // add error handling in the event the user types "mark homework" as an action
+                    Task t = new Task(inputLine);
+                    listOfItems[count] = t;
+                    count++;
+
+                    printHorizontalLinesBot();
+                    System.out.println("\tadded: " + inputLine);
+                    printHorizontalLinesBot();
+                }
             }
 
             // handle "unmark" command
@@ -73,15 +92,14 @@ public class Cheriie {
 
             // handle adding tasks to the list
             else {
-                Task t = new Task(line);
+                Task t = new Task(inputLine);
                 listOfItems[count] = t;
                 count++;
 
                 printHorizontalLinesBot();
-                System.out.println("\tadded: " + line);
+                System.out.println("\tadded: " + inputLine);
                 printHorizontalLinesBot();
             }
-
         }
     }
 }
