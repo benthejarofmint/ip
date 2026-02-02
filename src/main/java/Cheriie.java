@@ -1,17 +1,32 @@
 import java.util.Scanner;
 
 public class Cheriie {
+
+    private static final int MAX_TASKS = 100;
+    private static Task[] listOfItems = new Task[MAX_TASKS];
+    private static int taskCount = 0;
+
     public static void main(String[] args) {
-        greeting();
-        // main functionality goes here
+        showGreeting();
         taskManager();
+    }
+
+    public static void saveTask(Task t) {
+        listOfItems[taskCount] = t;
+        taskCount++;
+
+        printHorizontalLinesBot();
+        System.out.println("\tokay got it! i've added this task to the list:");
+        System.out.println("\t  " + t.toString());
+        System.out.println("\tnow you have " + taskCount + " task(s) in the list. ☺️");
+        printHorizontalLinesBot();
     }
 
     public static void printHorizontalLinesBot() {
         System.out.print("─".repeat(70).indent(3));
     }
 
-    public static void greeting() {
+    public static void showGreeting() {
         String logo = """
              ____ _
             / ___| |__   ___ _ __   (_) (_) ___
@@ -26,58 +41,60 @@ public class Cheriie {
         printHorizontalLinesBot();
     }
 
-    public static void byeCommand() {
+    public static void handleByeCommand() {
         printHorizontalLinesBot();
         System.out.println("\tbye :) hope to hear from you again soon!");
         printHorizontalLinesBot();
     }
 
-    public static void listCommand(int count, Task[] listOfItems) {
+    public static void handleListCommand() {
         printHorizontalLinesBot();
         System.out.println("\there are the tasks in your current list:");
-        for (int i = 0; i < count; i++) {
-            Task t = listOfItems[i];
-            System.out.println("\t" + (i + 1) + ". [" + t.getStatusIcon() +"] " + t.description);
+        for (int i = 0; i < taskCount; i++) {
+            System.out.println("\t" + (i + 1) + "." + listOfItems[i]);
         }
         printHorizontalLinesBot();
     }
 
+
     public static void taskManager() {
-        Task[] listOfItems = new Task[100];
-        int count = 0;
         Scanner in = new Scanner(System.in);
+
         while (true) {
             String inputLine = in.nextLine();
             // split output to recognise commands
-            String[] parts = inputLine.split(" ");
-            String command = parts[0];
+            String[] parts = inputLine.split(" ", 2);
+            String command = parts[0].toLowerCase();
+            String arguments = (parts.length > 1) ? parts[1] : "";
 
             // if the user wants to quite straight away
             if (command.equalsIgnoreCase("bye")) {
-                byeCommand();
+                handleByeCommand();
                 break;
             }
 
             // handle "list" command
             else if (command.equalsIgnoreCase("list")) {
-                listCommand(count, listOfItems);
+                handleListCommand();
             }
 
             // handle "mark" command
             else if (command.equalsIgnoreCase("mark")) {
+                int index = Integer.parseInt(parts[1]) - 1;
                 try {
-                    int index = Integer.parseInt(parts[1]) - 1;
+                    if (index >= 0 && index < taskCount) {
+                        printHorizontalLinesBot();
+                        listOfItems[index].markAsDone();
+                        printHorizontalLinesBot();
+                    } else {
+                        // this handles cases where index is valid for array but no task exists there yet
+                        printHorizontalLinesBot();
+                        System.out.println("\tthis task does not exist yet! i can't mark it >:(");
+                        printHorizontalLinesBot();
+                    }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     printHorizontalLinesBot();
-                    listOfItems[index].markAsDone();
-                    printHorizontalLinesBot();
-                } catch (NumberFormatException e) {
-                    // add error handling in the event the user types "mark homework" as an action
-                    Task t = new Task(inputLine);
-                    listOfItems[count] = t;
-                    count++;
-
-                    printHorizontalLinesBot();
-                    System.out.println("\tadded: " + inputLine);
+                    System.out.println("\tplease provide a valid task number! you can check using the 'list' command");
                     printHorizontalLinesBot();
                 }
             }
@@ -85,19 +102,67 @@ public class Cheriie {
             // handle "unmark" command
             else if (command.equalsIgnoreCase("unmark")) {
                 int index = Integer.parseInt(parts[1]) - 1;
-                printHorizontalLinesBot();
-                listOfItems[index].markUndone();
-                printHorizontalLinesBot();
+                try {
+                    if (index >= 0 && index < taskCount) {
+                        printHorizontalLinesBot();
+                        listOfItems[index].markAsDone();
+                        printHorizontalLinesBot();
+                    } else {
+                        // this handles cases where index is valid for array but no task exists there yet
+                        printHorizontalLinesBot();
+                        System.out.println("\tthis task does not exist yet! i can't unmark it >:(");
+                        printHorizontalLinesBot();
+                    }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                    printHorizontalLinesBot();
+                    System.out.println("\tplease provide a valid task number! you can check using the 'list' command");
+                    printHorizontalLinesBot();
+                }
+            }
+
+            else if (command.equalsIgnoreCase("todo")) {
+                if (arguments.isEmpty()) {
+                    printHorizontalLinesBot();
+                    System.out.println("\toh no, the description of the 'todo' command cannot be empty :/");
+                    printHorizontalLinesBot();
+                    break;
+                }
+                Todo t = new Todo(arguments);
+                saveTask(t);
+            }
+
+            else if (command.equalsIgnoreCase("deadline")) {
+                if (!arguments.contains(" /by ")) {
+                    printHorizontalLinesBot();
+                    System.out.println("\tplease specify a deadline using '/by'. thanks.");
+                    printHorizontalLinesBot();
+                    return;
+                }
+                String[] part = arguments.split(" /by ");
+                String description = part[0];
+                String by = part[1];
+
+                Deadline d = new Deadline(description, by);
+                saveTask(d);
+            }
+
+            else if (command.equalsIgnoreCase("event")) {
+                if (!arguments.contains(" /from ") || !arguments.contains(" /to ")) {
+                    System.out.println("\tplease specify event time using '/from' and '/to'. thanks.");
+                    return;
+                }
+                String[] part = arguments.split(" /from ");
+                String description = part[0];
+                String[] timeParts = part[1].split(" /to ");
+
+                Event e = new Event(description, timeParts[0], timeParts[1]);
+                saveTask(e);
             }
 
             // handle adding tasks to the list
             else {
-                Task t = new Task(inputLine);
-                listOfItems[count] = t;
-                count++;
-
                 printHorizontalLinesBot();
-                System.out.println("\tadded: " + inputLine);
+                System.out.println("\ti'm sorry, i have no idea what that means :(");
                 printHorizontalLinesBot();
             }
         }
