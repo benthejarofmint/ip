@@ -1,0 +1,13 @@
+todo read book
+list
+todo play with cat
+todo study cs2113
+deadline ee2211 assignment /by monday 2pm
+deadline homework /by tuesday 4pm
+list
+event visit parents /from tuesday 1pm /to friday 6pm
+mark 1
+mark 2
+list
+unmark 1
+list
