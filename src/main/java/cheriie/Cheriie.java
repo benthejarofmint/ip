@@ -1,3 +1,5 @@
+package cheriie;
+
 import java.util.Scanner;
 
 public class Cheriie {
