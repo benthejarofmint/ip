@@ -12,13 +12,19 @@ public class Cheriie {
         taskManager();
     }
 
-    public static void saveTask(Task t) {
-        listOfItems[taskCount] = t;
+    public static void saveTask(Task task) {
+        //handle error
+        if (taskCount >= MAX_TASKS) {
+            printHorizontalLinesBot();
+            System.out.println("\toh no! your task list is full!");
+            printHorizontalLinesBot();
+        }
+        listOfItems[taskCount] = task;
         taskCount++;
 
         printHorizontalLinesBot();
         System.out.println("\tokay got it! i've added this task to the list:");
-        System.out.println("\t  " + t.toString());
+        System.out.println("\t  " + task.toString());
         System.out.println("\tnow you have " + taskCount + " task(s) in the list. ☺️");
         printHorizontalLinesBot();
     }
@@ -52,7 +58,7 @@ public class Cheriie {
         printHorizontalLinesBot();
         System.out.println("\there are the tasks in your current list:");
         for (int i = 0; i < taskCount; i++) {
-            System.out.println("\t" + (i + TASK_DISPLAY_OFFSET) + "." + listOfItems[i]);
+            System.out.println("\t" + (i + 1) + "." + listOfItems[i]);
         }
         printHorizontalLinesBot();
     }
