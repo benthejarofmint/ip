@@ -11,7 +11,7 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "✅" : " ");
+        return (isDone ? "✔" : " ");
     }
 
     public void markAsDone() {

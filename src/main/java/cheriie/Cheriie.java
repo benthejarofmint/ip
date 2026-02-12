@@ -26,7 +26,7 @@ public class Cheriie {
 
         System.out.println("\tokay got it! i've added this task to the list:");
         System.out.println("\t  " + task.toString());
-        System.out.println("\tnow you have " + taskCount + " task(s) in the list. ☺️");
+        System.out.println("\tnow you have " + taskCount + " task(s) in the list. ( ˘͈ ᵕ ˘͈)️");
     }
 
     public static void printHorizontalLinesBot() {
@@ -43,7 +43,7 @@ public class Cheriie {
            """;
         System.out.println(logo);
         printHorizontalLinesBot();
-        System.out.println("\thello there ! my name is Cheriie !");
+        System.out.println("\thello there ! my name is Cheriie („• ֊ •„) !");
         System.out.println("\twhat may i do for you today?");
         printHorizontalLinesBot();
     }
