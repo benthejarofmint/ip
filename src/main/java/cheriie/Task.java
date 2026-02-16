@@ -31,6 +31,36 @@ public abstract class Task {
 
     public abstract String toDataString();
 
+    public static Task fromStorage(String line) {
+        String[] parts = line.split(" \\| ");
+
+        String type = parts[0];
+        boolean isDone = parts[1].trim().equals("1");
+        String description = parts[2];
+
+        Task task = null;
+
+        switch (type) {
+        case "T":
+            task = new Todo(description);
+            break;
+        case "D":
+            task = new Deadline(description, parts[3]);
+            break;
+        case "E":
+            task = new Event(description, parts[3], parts[4]);
+            break;
+        default:
+            return null;
+        }
+
+        if (isDone) {
+            task.setDone(true);
+        }
+
+        return task;
+    }
+
     public void setDone(boolean isDone) {
         this.isDone = isDone;
     }
