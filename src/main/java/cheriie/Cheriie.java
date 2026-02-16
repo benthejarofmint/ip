@@ -17,31 +17,30 @@ public class Cheriie {
     public static void saveTask(Task task) {
         if (taskCount >= MAX_TASKS) {
             printHorizontalLinesBot();
-            System.out.println("\toh no! your task list is full!");
+            print("oh no! your task list is full!");
             printHorizontalLinesBot();
         }
         listOfItems[taskCount] = task;
         taskCount++;
-
-        System.out.println("\tokay got it! i've added this task to the list:");
-        System.out.println("\t  " + task.toString());
-        System.out.println("\tnow you have " + taskCount + " task(s) in the list. ( ˘͈ ᵕ ˘͈)️");
+        print("okay got it! i've added this task to the list:",
+                " " + task.toString(),
+                "now you have " + taskCount + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
     }
 
-    public static String printHelp() {
+    private static String printHelp() {
         return ("""
                 i'm sorry, i have no idea what that means :(
-                \there are a list of words i understand:
-                \t1. list - lists out all current tasks
-                \t2. todo - adds a todo to tasks
-                \t3. deadline [description] /by [date/time] - adds a deadline task
-                \t4. event [description] /from [date/time] /to [date/time] - adds an event task
-                \t5. mark [task number] - to mark task as complete
-                \t6. unmark [task number] - to mark task as incomplete
-                \t7. bye - to end the conversation""");
+                here are a list of words i understand:
+                1. list - lists out all current tasks
+                2. todo - adds a todo to tasks
+                3. deadline [description] /by [date/time] - adds a deadline task
+                4. event [description] /from [date/time] /to [date/time] - adds an event task
+                5. mark [task number] - to mark task as complete
+                6. unmark [task number] - to mark task as incomplete
+                7. bye - to end the conversation""");
     }
 
-    public static void printHorizontalLinesBot() {
+    private static void printHorizontalLinesBot() {
         System.out.print("─".repeat(75).indent(3));
     }
 
@@ -61,19 +60,19 @@ public class Cheriie {
            """;
         System.out.println(logo);
         printHorizontalLinesBot();
-        System.out.println("\thello there ! my name is Cheriie („• ֊ •„) !");
-        System.out.println("\twhat may i do for you today?");
+        print("hello there ! my name is Cheriie („• ֊ •„) !");
+        print("what may i do for you today?");
         printHorizontalLinesBot();
     }
 
     public static void handleByeCommand() {
-        System.out.println("\tbye :) hope to hear from you again soon!");
+        print("bye :) hope to hear from you again soon!");
     }
 
     public static void handleListCommand() {
-        System.out.println("\there are the tasks in your current list:");
+        print("here are the tasks in your current list:");
         for (int i = 0; i < taskCount; i++) {
-            System.out.println("\t" + (i + 1) + "." + listOfItems[i]);
+            print((i + 1) + "." + listOfItems[i]);
         }
     }
 
@@ -146,7 +145,7 @@ public class Cheriie {
                     throw new CheriieException(printHelp());
                 }
             } catch (CheriieException e) {
-                System.out.println("\t" + e.getMessage());
+                print(e.getMessage());
             }
             // print line after output
             printHorizontalLinesBot();
