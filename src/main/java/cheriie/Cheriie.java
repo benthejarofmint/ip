@@ -5,9 +5,7 @@ import java.util.ArrayList;
 
 public class Cheriie {
 
-    private static final int MAX_TASKS = 100;
-    private static Task[] listOfItems = new Task[MAX_TASKS];
-    private static int taskCount = 0;
+    private static ArrayList<Task> taskLists = new ArrayList<>();
     private static final int TASK_DISPLAY_OFFSET = 1;
 
     private static Storage storage;
@@ -15,14 +13,7 @@ public class Cheriie {
     public static void main(String[] args) {
         storage = new Storage("data/cheriie.txt");
         try {
-            ArrayList<Task> storedTasks = storage.load();
-            // convert ArrayList back to Array for current implementation
-            for (Task t : storedTasks) {
-                if (taskCount < MAX_TASKS) {
-                    listOfItems[taskCount] = t;
-                    taskCount++;
-                }
-            }
+            taskLists = storage.load();
         } catch (CheriieException e) {
             print("error loading file: " + e.getMessage());
         }
@@ -31,19 +22,12 @@ public class Cheriie {
     }
 
     public static void saveTask(Task task) {
-        if (taskCount >= MAX_TASKS) {
-            printHorizontalLinesBot();
-            print("oh no! your task list is full!");
-            printHorizontalLinesBot();
-        }
-        listOfItems[taskCount] = task;
-        taskCount++;
-
-        storage.save(listOfItems, taskCount);
+        taskLists.add(task);
+        storage.save(taskLists);
 
         print("okay got it! i've added this task to the list:",
                 " " + task.toString(),
-                "now you have " + taskCount + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
+                "now you have " + taskLists.size() + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
     }
 
     private static String printHelp() {
@@ -90,23 +74,21 @@ public class Cheriie {
 
     public static void handleListCommand() {
         print("here are the tasks in your current list:");
-        for (int i = 0; i < taskCount; i++) {
-            print((i + 1) + "." + listOfItems[i]);
+        for (int i = 0; i < taskLists.size(); i++) {
+            print((i + 1) + "." + taskLists.get(i).toString());
         }
     }
 
     public static void handleMarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskCount);
-        listOfItems[index].markAsDone();
-
-        storage.save(listOfItems, taskCount);
+        int index = Parser.parseIndex(argument, taskLists.size());
+        taskLists.get(index).markAsDone();
+        storage.save(taskLists);
     }
 
     public static void handleUnmarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskCount);
-        listOfItems[index].markUndone();
-
-        storage.save(listOfItems, taskCount);
+        int index = Parser.parseIndex(argument, taskLists.size());
+        taskLists.get(index).markUndone();
+        storage.save(taskLists);
     }
 
     public static void handleTodoCommand(String argument) throws CheriieException {

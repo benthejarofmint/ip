@@ -15,12 +15,12 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public void save(Task[] tasks, int taskCount) {
+    public void save(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);
             FileWriter writer = new FileWriter(file);
-            for (int i = 0; i < taskCount; i++) {
-                writer.write(tasks[i].toDataString() + "\n");
+            for (Task task : tasks) {
+                writer.write(task.toDataString() + "\n");
             }
             writer.close();
         } catch (IOException e) {
@@ -40,7 +40,7 @@ public class Storage {
                 file.createNewFile();
                 return loadedTasks;
             } catch (IOException e) {
-                throw new CheriieException("Error creating new file: " + e.getMessage());
+                throw new CheriieException("error creating new file: " + e.getMessage());
             }
         }
 
@@ -49,7 +49,7 @@ public class Storage {
                 String line = scanner.nextLine();
                 String[] parts = line.split(" \\| ");
                 String type = parts[0];
-                boolean isDone = parts[1].equals("1");
+                boolean isDone = parts[1].trim().equals("1");
                 String description = parts[2];
 
                 Task task = null;
