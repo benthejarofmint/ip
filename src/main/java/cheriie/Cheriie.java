@@ -1,12 +1,11 @@
 package cheriie;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Cheriie {
 
-    private static final int MAX_TASKS = 100;
-    private static Task[] listOfItems = new Task[MAX_TASKS];
-    private static int taskCount = 0;
+    private static ArrayList<Task> taskLists = new ArrayList<>();
     private static final int TASK_DISPLAY_OFFSET = 1;
 
     public static void main(String[] args) {
