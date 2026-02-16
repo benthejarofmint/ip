@@ -107,7 +107,7 @@ public class Cheriie {
     public static void handleDeleteCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size(), "delete");
         deleteTask(index);
-
+        saveTasksToStorage();
     }
 
     public static void handleTodoCommand(String argument) throws CheriieException {
