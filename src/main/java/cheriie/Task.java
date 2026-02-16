@@ -1,6 +1,6 @@
 package cheriie;
 
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -23,6 +23,16 @@ public class Task {
         this.isDone = false;
         Cheriie.print("understands, i've marked this task as NOT done:");
         Cheriie.print(this.toString());
+    }
+
+    public String getStatusForStorage() {
+        return (isDone ? "1" : "0");
+    }
+
+    public abstract String toDataString();
+
+    public void setDone(boolean done) {
+        this.isDone = isDone;
     }
 
     @Override
