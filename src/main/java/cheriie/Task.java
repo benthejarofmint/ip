@@ -31,7 +31,7 @@ public abstract class Task {
 
     public abstract String toDataString();
 
-    public void setDone(boolean done) {
+    public void setDone(boolean isDone) {
         this.isDone = isDone;
     }
 
