@@ -45,6 +45,12 @@ public class Cheriie {
         System.out.print("─".repeat(75).indent(3));
     }
 
+    public static void print(String... messages) {
+        for (String message : messages) {
+            message.lines().forEach(line -> System.out.println("\t" + line));
+        }
+    }
+
     public static void showGreeting() {
         String logo = """
              ____ _
