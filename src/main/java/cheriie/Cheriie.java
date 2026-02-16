@@ -15,7 +15,6 @@ public class Cheriie {
     }
 
     public static void saveTask(Task task) {
-        //handle error
         if (taskCount >= MAX_TASKS) {
             printHorizontalLinesBot();
             System.out.println("\toh no! your task list is full!");
@@ -27,6 +26,19 @@ public class Cheriie {
         System.out.println("\tokay got it! i've added this task to the list:");
         System.out.println("\t  " + task.toString());
         System.out.println("\tnow you have " + taskCount + " task(s) in the list. ( ˘͈ ᵕ ˘͈)️");
+    }
+
+    public static String printHelp() {
+        return ("""
+                i'm sorry, i have no idea what that means :(
+                \there are a list of words i understand:
+                \t1. list - lists out all current tasks
+                \t2. todo - adds a todo to tasks
+                \t3. deadline [description] /by [date/time] - adds a deadline task
+                \t4. event [description] /from [date/time] /to [date/time] - adds an event task
+                \t5. mark [task number] - to mark task as complete
+                \t6. unmark [task number] - to mark task as incomplete
+                \t7. bye - to end the conversation""");
     }
 
     public static void printHorizontalLinesBot() {
@@ -71,24 +83,18 @@ public class Cheriie {
 
     public static void handleTodoCommand(String argument) throws CheriieException {
         String description = Parser.parseToDo(argument);
-        Todo t = new Todo(argument);
+        Todo t = new Todo(description);
         saveTask(t);
     }
 
     public static void handleDeadlineCommand(String argument) throws CheriieException {
         String[] parts = Parser.parseDeadline(argument);
-        // parts[0]: description
-        // parts[1]: by
         Deadline d = new Deadline(parts[0], parts[1]);
         saveTask(d);
     }
 
     public static void handleEventCommand(String argument) throws CheriieException {
         String[] parts = Parser.parseEvent(argument);
-        // parts[0]= description;
-        // parts[1] = /from;
-        // parts[2] = /to;
-
         Event e = new Event(parts[0], parts[1], parts[2]);
         saveTask(e);
     }
@@ -100,14 +106,12 @@ public class Cheriie {
 
         while (isRunning) {
             String inputLine = in.nextLine();
-            // split output to recognise commands
             String[] parts = inputLine.split(" ", 2);
             String command = parts[0].toLowerCase();
             String arguments = (parts.length > 1) ? parts[1] : "";
 
             printHorizontalLinesBot();
 
-            // if the user wants to quite straight away
             try {
                 switch(command) {
                 case "bye":
@@ -133,16 +137,7 @@ public class Cheriie {
                     handleEventCommand(arguments);
                     break;
                 default:
-                    throw new CheriieException("""
-    i'm sorry, i have no idea what that means :(
-    \there are a list of words i understand:
-    \t1. list - lists out all current tasks
-    \t2. todo - adds a todo to tasks
-    \t3. deadline [description] /by [date/time] - adds a deadline task
-    \t4. event [description] /from [date/time] /to [date/time] - adds an event task
-    \t5. mark [task number] - to mark task as complete
-    \t6. unmark [task number] - to mark task as incomplete
-    \t7. bye - to end the conversation""");
+                    throw new CheriieException(printHelp());
                 }
             } catch (CheriieException e) {
                 System.out.println("\t" + e.getMessage());
