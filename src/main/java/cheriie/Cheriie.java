@@ -14,13 +14,7 @@ public class Cheriie {
     }
 
     public static void saveTask(Task task) {
-        if (taskCount >= MAX_TASKS) {
-            printHorizontalLinesBot();
-            print("oh no! your task list is full!");
-            printHorizontalLinesBot();
-        }
-        listOfItems[taskCount] = task;
-        taskCount++;
+        taskLists.add(task);
         print("okay got it! i've added this task to the list:",
                 " " + task.toString(),
                 "now you have " + taskCount + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
