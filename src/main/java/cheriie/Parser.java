@@ -8,20 +8,20 @@ public class Parser {
     }
 
     // to validate index for mark/unmark commands
-    public static int parseIndex(String argument, int currentTaskCount) throws CheriieException {
+    public static int parseIndex(String argument, int currentTaskCount, String command) throws CheriieException {
         if (argument.isEmpty()) {
-            throw new CheriieException("please specify a task number to mark!");
+            throw new CheriieException("please specify a task number to " + command + " !");
         }
         try {
             int taskIndex = Integer.parseInt(argument.trim()) - 1;
             // check if the index is within bounds
             if (taskIndex < 0 || taskIndex >= currentTaskCount) {
-                throw new CheriieException("this task does not exist yet! i can't mark it >:(.\n" + "you have " +
-                        currentTaskCount + " task(s) right now !");
+                throw new CheriieException("this task does not exist yet! i can't " + command + " it >:(.\n"
+                        + "you have " + currentTaskCount + " task(s) right now !");
             }
             return taskIndex;
         } catch (NumberFormatException e) {
-            throw new CheriieException("please provide a valid task number! eg. 'mark 1'.");
+            throw new CheriieException("please provide a valid task number! eg. '" + command + "' 1'.");
         }
     }
 
