@@ -1,5 +1,6 @@
 package cheriie;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -9,12 +10,19 @@ public class Cheriie {
     private static final int TASK_DISPLAY_OFFSET = 1;
 
     private static Storage storage;
+    private static void saveTasksToStorage() {
+        try {
+            storage.save(taskLists);
+        } catch (IOException e) {
+            print("warning! could not save changes to file: " + e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         storage = new Storage("data/cheriie.txt");
         try {
             taskLists = storage.load();
-        } catch (CheriieException e) {
+        } catch (IOException e) {
             print("error loading file: " + e.getMessage());
         }
         showGreeting();
@@ -23,7 +31,7 @@ public class Cheriie {
 
     public static void saveTask(Task task) {
         taskLists.add(task);
-        storage.save(taskLists);
+        saveTasksToStorage();
 
         print("okay got it! i've added this task to the list:",
                 " " + task.toString(),
@@ -82,13 +90,13 @@ public class Cheriie {
     public static void handleMarkCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size());
         taskLists.get(index).markAsDone();
-        storage.save(taskLists);
+        saveTasksToStorage();
     }
 
     public static void handleUnmarkCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size());
         taskLists.get(index).markUndone();
-        storage.save(taskLists);
+        saveTasksToStorage();
     }
 
     public static void handleTodoCommand(String argument) throws CheriieException {
