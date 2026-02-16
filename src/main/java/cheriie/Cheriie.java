@@ -77,12 +77,12 @@ public class Cheriie {
     }
 
     public static void handleMarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskCount);
+        int index = Parser.parseIndex(argument, taskCount, "mark");
         listOfItems[index].markAsDone();
     }
 
     public static void handleUnmarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskCount);
+        int index = Parser.parseIndex(argument, taskCount, "unmark");
         listOfItems[index].markUndone();
     }
 
