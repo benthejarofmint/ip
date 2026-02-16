@@ -1,5 +1,6 @@
 package cheriie;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -8,13 +9,29 @@ public class Cheriie {
     private static ArrayList<Task> taskLists = new ArrayList<>();
     private static final int TASK_DISPLAY_OFFSET = 1;
 
+    private static Storage storage;
+    private static void saveTasksToStorage() {
+        try {
+            storage.save(taskLists);
+        } catch (IOException e) {
+            print("warning! could not save changes to file: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
+        storage = new Storage("data/cheriie.txt");
+        try {
+            taskLists = storage.load();
+        } catch (IOException e) {
+            print("error loading file: " + e.getMessage());
+        }
         showGreeting();
         taskManager();
     }
 
     public static void saveTask(Task task) {
         taskLists.add(task);
+        saveTasksToStorage();
         print("okay got it! i've added this task to the list:",
                 " " + task.toString(),
                 "now you have " + taskLists.size() + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
@@ -71,23 +88,26 @@ public class Cheriie {
     public static void handleListCommand() {
         print("here are the tasks in your current list:");
         for (int i = 0; i < taskLists.size(); i++) {
-            print((i + 1) + "." + taskLists.get(i));
+            print((i + 1) + "." + taskLists.get(i).toString());
         }
     }
 
     public static void handleMarkCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size(), "mark");
         taskLists.get(index).markAsDone();
+        saveTasksToStorage();
     }
 
     public static void handleUnmarkCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size(), "unmark");
         taskLists.get(index).markUndone();
+        saveTasksToStorage();
     }
 
     public static void handleDeleteCommand(String argument) throws CheriieException {
         int index = Parser.parseIndex(argument, taskLists.size(), "delete");
         deleteTask(index);
+
     }
 
     public static void handleTodoCommand(String argument) throws CheriieException {
