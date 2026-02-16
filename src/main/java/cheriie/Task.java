@@ -4,7 +4,6 @@ public class Task {
     protected String description;
     protected boolean isDone;
 
-    // setter
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -16,18 +15,18 @@ public class Task {
 
     public void markAsDone() {
         this.isDone = true;
-        System.out.println("\tgood job! i've marked this task as done:");
-        System.out.println("\t " + this.toString());
+        Cheriie.print("good job! i've marked this task as done:");
+        Cheriie.print(this.toString());
     }
 
     public void markUndone() {
         this.isDone = false;
-        System.out.println("\tunderstands, i've marked this task as NOT done:");
-        System.out.println("\t " + this.toString());
+        Cheriie.print("understands, i've marked this task as NOT done:");
+        Cheriie.print(this.toString());
     }
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return " [" + getStatusIcon() + "] " + description;
     }
 }

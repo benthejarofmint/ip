@@ -16,7 +16,7 @@ public class Parser {
             int taskIndex = Integer.parseInt(argument.trim()) - 1;
             // check if the index is within bounds
             if (taskIndex < 0 || taskIndex >= currentTaskCount) {
-                throw new CheriieException("this task does not exist yet! i can't mark it >:(.\n" + "\tyou have " +
+                throw new CheriieException("this task does not exist yet! i can't mark it >:(.\n" + "you have " +
                         currentTaskCount + " task(s) right now !");
             }
             return taskIndex;
