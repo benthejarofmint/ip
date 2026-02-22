@@ -1,154 +1,92 @@
 package cheriie;
 
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Cheriie {
 
-    private static ArrayList<Task> taskLists = new ArrayList<>();
     private static final int TASK_DISPLAY_OFFSET = 1;
+    private  Storage storage;
+    private TaskList taskLists;
 
-    private static Storage storage;
-    private static void saveTasksToStorage() {
+    public Cheriie(String filePath) {
+        storage = new Storage(filePath);
         try {
-            storage.save(taskLists);
+            taskLists = new TaskList(storage.load());
         } catch (IOException e) {
-            print("warning! could not save changes to file: " + e.getMessage());
+            Ui.print("error loading file: " + e.getMessage());
+            taskLists = new TaskList(new ArrayList<>());
         }
     }
 
     public static void main(String[] args) {
-        storage = new Storage("data/cheriie.txt");
+        new Cheriie("data/cheriie.txt").run();
+    }
+
+    private void saveChanges() {
         try {
-            taskLists = storage.load();
+            storage.save(taskLists.getTasks());
         } catch (IOException e) {
-            print("error loading file: " + e.getMessage());
-        }
-        showGreeting();
-        taskManager();
-    }
-
-    public static void saveTask(Task task) {
-        taskLists.add(task);
-        saveTasksToStorage();
-        print("okay got it! i've added this task to the list:",
-                " " + task.toString(),
-                "now you have " + taskLists.size() + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
-    }
-
-    public static void deleteTask(int index) {
-        print("okay got it! i've removed this task from the list:", " " + taskLists.get(index).toString());
-        taskLists.remove(index);
-        print("now you have " + taskLists.size() + " task(s) in the list.( ˘͈ ᵕ ˘͈)️");
-    }
-
-    private static String printHelp() {
-        return ("""
-                i'm sorry, i have no idea what that means :(
-                here are a list of words i understand:
-                1. list - lists out all current tasks
-                2. todo - adds a todo to tasks
-                3. deadline [description] /by [date/time] - adds a deadline task
-                4. event [description] /from [date/time] /to [date/time] - adds an event task
-                5. mark [task number] - to mark task as complete
-                6. unmark [task number] - to mark task as incomplete
-                7. bye - to end the conversation""");
-    }
-
-    private static void printHorizontalLinesBot() {
-        System.out.print("─".repeat(75).indent(3));
-    }
-
-    public static void print(String... messages) {
-        for (String message : messages) {
-            message.lines().forEach(line -> System.out.println("\t" + line));
+            Ui.print("warning! could not save changes to file: " + e.getMessage());
         }
     }
 
-    public static void showGreeting() {
-        String logo = """
-             ____ _
-            / ___| |__   ___ _ __   (_) (_) ___
-           | |   | '_ \\ / _ \\ '__|  | | | |/ _ \\
-           | |___| | | |  __/ |     | | | |  __/
-            \\____|_| |_|\\___|_|     |_|_|_|\\___|
-           """;
-        System.out.println(logo);
-        printHorizontalLinesBot();
-        print("hello there ! my name is Cheriie („• ֊ •„) !");
-        print("what may i do for you today?");
-        printHorizontalLinesBot();
+    public void handleMarkCommand(String argument) throws CheriieException {
+        int index = Parser.parseIndex(argument, taskLists.getSize(), "mark");
+        taskLists.markTask(index);
+        saveChanges();
     }
 
-    public static void handleByeCommand() {
-        print("bye :) hope to hear from you again soon!");
+    public void handleUnmarkCommand(String argument) throws CheriieException {
+        int index = Parser.parseIndex(argument, taskLists.getSize(), "unmark");
+        taskLists.unmarkTask(index);
+        saveChanges();
     }
 
-    public static void handleListCommand() {
-        print("here are the tasks in your current list:");
-        for (int i = 0; i < taskLists.size(); i++) {
-            print((i + 1) + "." + taskLists.get(i).toString());
-        }
+    public void handleDeleteCommand(String argument) throws CheriieException {
+        int index = Parser.parseIndex(argument, taskLists.getSize(), "delete");
+        taskLists.deleteTask(index);
+        saveChanges();
     }
 
-    public static void handleMarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.size(), "mark");
-        taskLists.get(index).markAsDone();
-        saveTasksToStorage();
-    }
-
-    public static void handleUnmarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.size(), "unmark");
-        taskLists.get(index).markUndone();
-        saveTasksToStorage();
-    }
-
-    public static void handleDeleteCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.size(), "delete");
-        deleteTask(index);
-        saveTasksToStorage();
-    }
-
-    public static void handleTodoCommand(String argument) throws CheriieException {
+    public void handleTodoCommand(String argument) throws CheriieException {
         String description = Parser.parseToDo(argument);
         Todo t = new Todo(description);
-        saveTask(t);
+        TaskList.saveTask(t);
     }
 
-    public static void handleDeadlineCommand(String argument) throws CheriieException {
+    public void handleDeadlineCommand(String argument) throws CheriieException {
         String[] parts = Parser.parseDeadline(argument);
         Deadline d = new Deadline(parts[0], parts[1]);
-        saveTask(d);
+        TaskList.saveTask(d);
     }
 
-    public static void handleEventCommand(String argument) throws CheriieException {
+    public void handleEventCommand(String argument) throws CheriieException {
         String[] parts = Parser.parseEvent(argument);
         Event e = new Event(parts[0], parts[1], parts[2]);
-        saveTask(e);
+        TaskList.saveTask(e);
     }
 
-
-    public static void taskManager() {
-        Scanner in = new Scanner(System.in);
+    public void run() {
+        Ui.showWelcomeMessage();
         boolean isRunning = true;
 
         while (isRunning) {
-            String inputLine = in.nextLine();
+            String inputLine = Ui.getInput();
             String[] parts = inputLine.split(" ", 2);
             String command = parts[0].toLowerCase();
             String arguments = (parts.length > 1) ? parts[1] : "";
 
-            printHorizontalLinesBot();
+            Ui.printHorizontalLinesBot();
 
             try {
                 switch(command) {
                 case "bye":
-                    handleByeCommand();
+                    Ui.showEndMessage();
                     isRunning = false;
                     break;
                 case "list":
-                    handleListCommand();
+                    taskLists.listTasks();
                     break;
                 case "mark":
                     handleMarkCommand(arguments);
@@ -169,13 +107,13 @@ public class Cheriie {
                     handleDeleteCommand(arguments);
                     break;
                 default:
-                    throw new CheriieException(printHelp());
+                    Ui.showHelpMessage();
                 }
             } catch (CheriieException e) {
-                print(e.getMessage());
+                Ui.print(e.getMessage());
             }
             // print line after output
-            printHorizontalLinesBot();
+            Ui.printHorizontalLinesBot();
         }
     }
 }
