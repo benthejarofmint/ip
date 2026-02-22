@@ -36,7 +36,6 @@ public class Display {
 
     public static void showHelpMessage() {
         print("""
-                i'm sorry, i have no idea what that means :(
                 here are a list of words i understand:
                 1. list - lists out all current tasks
                 2. todo - adds a todo to tasks

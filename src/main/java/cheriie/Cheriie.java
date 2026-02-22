@@ -2,11 +2,9 @@ package cheriie;
 
 import cheriie.parser.Parser;
 import cheriie.storage.Storage;
-import cheriie.task.Deadline;
-import cheriie.task.Event;
-import cheriie.task.Todo;
 import cheriie.tasklist.TaskList;
 import cheriie.ui.Ui;
+import cheriie.command.Command;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,8 +14,10 @@ public class Cheriie {
     private static final int TASK_DISPLAY_OFFSET = 1;
     private Storage storage;
     private TaskList taskLists;
+    private Ui ui;
 
     public Cheriie(String filePath) {
+        ui = new Ui();
         storage = new Storage(filePath);
         try {
             taskLists = new TaskList(storage.load());
@@ -39,88 +39,20 @@ public class Cheriie {
         }
     }
 
-    public void handleMarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.getSize(), "mark");
-        taskLists.markTask(index);
-        saveChanges();
-    }
-
-    public void handleUnmarkCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.getSize(), "unmark");
-        taskLists.unmarkTask(index);
-        saveChanges();
-    }
-
-    public void handleDeleteCommand(String argument) throws CheriieException {
-        int index = Parser.parseIndex(argument, taskLists.getSize(), "delete");
-        taskLists.deleteTask(index);
-        saveChanges();
-    }
-
-    public void handleTodoCommand(String argument) throws CheriieException {
-        String description = Parser.parseToDo(argument);
-        Todo t = new Todo(description);
-        TaskList.saveTask(t);
-    }
-
-    public void handleDeadlineCommand(String argument) throws CheriieException {
-        String[] parts = Parser.parseDeadline(argument);
-        Deadline d = new Deadline(parts[0], parts[1]);
-        TaskList.saveTask(d);
-    }
-
-    public void handleEventCommand(String argument) throws CheriieException {
-        String[] parts = Parser.parseEvent(argument);
-        Event e = new Event(parts[0], parts[1], parts[2]);
-        TaskList.saveTask(e);
-    }
-
     public void run() {
         Ui.showWelcomeMessage();
-        boolean isRunning = true;
+        boolean isExit = false;
 
-        while (isRunning) {
-            String inputLine = Ui.getInput();
-            String[] parts = inputLine.split(" ", 2);
-            String command = parts[0].toLowerCase();
-            String arguments = (parts.length > 1) ? parts[1] : "";
-
-            Ui.printHorizontalLinesBot();
-
+        while (!isExit) {
             try {
-                switch(command) {
-                case "bye":
-                    Ui.showEndMessage();
-                    isRunning = false;
-                    break;
-                case "list":
-                    taskLists.listTasks();
-                    break;
-                case "mark":
-                    handleMarkCommand(arguments);
-                    break;
-                case "unmark":
-                    handleUnmarkCommand(arguments);
-                    break;
-                case "todo":
-                    handleTodoCommand(arguments);
-                    break;
-                case "deadline":
-                    handleDeadlineCommand(arguments);
-                    break;
-                case "event":
-                    handleEventCommand(arguments);
-                    break;
-                case "delete":
-                    handleDeleteCommand(arguments);
-                    break;
-                default:
-                    Ui.showHelpMessage();
-                }
+                String fullCommand = Ui.getInput();
+                Ui.printHorizontalLinesBot();
+                Command c = Parser.parse(fullCommand, taskLists.getSize());
+                c.execute(taskLists, ui, storage);
+                isExit = c.isExit();
             } catch (CheriieException e) {
-                Ui.print(e.getMessage());
+                Ui.response(e.getMessage());
             }
-            // print line after output
             Ui.printHorizontalLinesBot();
         }
     }

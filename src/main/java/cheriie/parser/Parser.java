@@ -1,12 +1,46 @@
 package cheriie.parser;
 
 import cheriie.CheriieException;
+import cheriie.command.*;
+import cheriie.task.Deadline;
+import cheriie.task.Event;
+import cheriie.task.Todo;
+import cheriie.ui.Ui;
 
 public class Parser {
 
-    public static String getCommand(String input) {
+    public static Command parse(String input, int currentTaskCount) throws CheriieException {
         String[] parts = input.split(" ", 2);
-        return parts[0].toLowerCase();
+        String command = parts[0].toLowerCase();
+        String arguments = (parts.length > 1) ? parts[1] : "";
+
+        switch (command) {
+        case "bye":
+            return new ExitCommand();
+        case "list":
+            return new ListCommand();
+        case "todo":
+            return new AddCommand(new Todo(parseToDo(arguments)));
+        case "deadline":
+            String[] dParts = parseDeadline(arguments);
+            return new AddCommand(new Deadline(dParts[0], dParts[1]));
+        case "event":
+            String[] eParts = parseEvent(arguments);
+            return new AddCommand(new Event(eParts[0], eParts[1], eParts[2]));
+        case "mark":
+            int markIndex = parseIndex(arguments, currentTaskCount, "mark");
+            return new MarkCommand(markIndex);
+        case "unmark":
+            int unmarkIndex = parseIndex(arguments, currentTaskCount, "unmark");
+            return new UnmarkCommand(unmarkIndex);
+        case "delete":
+            int deleteIndex = parseIndex(arguments, currentTaskCount, "delete");
+            return new DeleteCommand(deleteIndex);
+        case "help":
+            return new HelpCommand();
+        default:
+            throw new CheriieException("i'm sorry, i have no idea what that means :(");
+        }
     }
 
     // to validate index for mark/unmark commands
