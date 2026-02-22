@@ -1,12 +1,20 @@
 package cheriie;
 
+import cheriie.parser.Parser;
+import cheriie.storage.Storage;
+import cheriie.task.Deadline;
+import cheriie.task.Event;
+import cheriie.task.Todo;
+import cheriie.tasklist.TaskList;
+import cheriie.ui.Ui;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Cheriie {
 
     private static final int TASK_DISPLAY_OFFSET = 1;
-    private  Storage storage;
+    private Storage storage;
     private TaskList taskLists;
 
     public Cheriie(String filePath) {

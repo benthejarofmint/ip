@@ -1,4 +1,4 @@
-package cheriie;
+package cheriie.ui;
 
 import java.util.Scanner;
 

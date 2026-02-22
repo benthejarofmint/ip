@@ -1,4 +1,4 @@
-package cheriie;
+package cheriie.ui;
 
 public class Display {
     public static void printHorizontalLinesBot() {

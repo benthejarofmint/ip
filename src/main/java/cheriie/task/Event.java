@@ -1,4 +1,4 @@
-package cheriie;
+package cheriie.task;
 
 public class Event extends Task {
 

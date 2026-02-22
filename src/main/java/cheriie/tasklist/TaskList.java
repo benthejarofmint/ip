@@ -1,4 +1,7 @@
-package cheriie;
+package cheriie.tasklist;
+
+import cheriie.task.Task;
+import cheriie.ui.Ui;
 
 import java.util.ArrayList;
 

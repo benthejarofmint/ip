@@ -1,4 +1,6 @@
-package cheriie;
+package cheriie.parser;
+
+import cheriie.CheriieException;
 
 public class Parser {
 

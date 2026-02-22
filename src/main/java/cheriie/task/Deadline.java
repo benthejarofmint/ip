@@ -1,4 +1,4 @@
-package cheriie;
+package cheriie.task;
 
 public class Deadline extends Task {
 

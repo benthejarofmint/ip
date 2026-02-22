@@ -1,4 +1,6 @@
-package cheriie;
+package cheriie.storage;
+
+import cheriie.task.Task;
 
 import java.io.IOException;
 import java.nio.file.Files;
