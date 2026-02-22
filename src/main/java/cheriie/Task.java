@@ -15,14 +15,10 @@ public abstract class Task {
 
     public void markAsDone() {
         this.isDone = true;
-        Cheriie.print("good job! i've marked this task as done:");
-        Cheriie.print(this.toString());
     }
 
     public void markUndone() {
         this.isDone = false;
-        Cheriie.print("understands, i've marked this task as NOT done:");
-        Cheriie.print(this.toString());
     }
 
     public String getStatusForStorage() {
