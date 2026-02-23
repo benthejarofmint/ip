@@ -38,6 +38,11 @@ public class Parser {
             return new DeleteCommand(deleteIndex);
         case "help":
             return new HelpCommand();
+        case "find":
+            if (arguments.isEmpty()) {
+                throw new CheriieException("error: you need to provide a keyword!");
+            }
+            return new FindCommand(arguments);
         default:
             throw new CheriieException("i'm sorry, i have no idea what that means :(");
         }
