@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Cheriie {
 
-    private static final int TASK_DISPLAY_OFFSET = 1;
     private Storage storage;
     private TaskList taskLists;
     private Ui ui;
