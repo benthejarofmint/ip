@@ -6,6 +6,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a trackable task that spans a specific duration with a clear start and end point.
+ * Extends the base Task class to support complex date and time parsing for both time boundaries,
+ * allowing for flexible user input formats.
+ */
 public class Event extends Task {
 
     protected String start;
@@ -69,6 +74,13 @@ public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
     private static final DateTimeFormatter DISPLAY_TIME_FORMAT = DateTimeFormatter.ofPattern("h:mma");
 
+    /**
+     * Attempts to convert a raw string into a structured temporal object against predefined format arrays.
+     * Grants the application high flexibility, allowing users to input event boundaries in whichever format they prefer without crashing.
+     *
+     * @param dateTimeStr The raw string to be parsed.
+     * @return A {@code ParsedDateTime} object if a format matches, or null if the string cannot be interpreted as a date/time.
+     */
     private ParsedDateTime parseDateTime(String dateTimeStr) {
         String parsingStr = dateTimeStr.toUpperCase();
         // try to parse as LocalDateTime
@@ -101,6 +113,13 @@ public class Event extends Task {
         return null; // return null if parsing fails
     }
 
+    /**
+     * Appends the appropriate English ordinal suffix (st, nd, rd, th) to a numeric day of the month.
+     * Enhances the UI display logic so dates read naturally (e.g., "1st" instead of "1").
+     *
+     * @param dayOfMonth The integer value of the day (1-31).
+     * @return The day formatted as a string with its ordinal suffix.
+     */
     private static String getDayWithOrdinalSuffix(int dayOfMonth) {
         if (dayOfMonth >= 11 && dayOfMonth <= 13) {
             return dayOfMonth + "th";
@@ -113,20 +132,49 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Translates a complete date and time object into a human-readable string with ordinal suffixes.
+     * Standardizes how complex event boundaries are presented in the user-facing console.
+     *
+     * @param dateTime The {@code LocalDateTime} object to be formatted.
+     * @return The formatted string (e.g., "1st of January 2026, 2:00pm").
+     */
     public static String formatDateTimeWithOrdinal(LocalDateTime dateTime) {
         String dayWithSuffix = getDayWithOrdinalSuffix(dateTime.getDayOfMonth());
         return dayWithSuffix + " of " + dateTime.format(DISPLAY_DATE_FORMAT) + ", " + dateTime.format(DISPLAY_TIME_FORMAT).toLowerCase();
     }
 
+    /**
+     * Translates a date-only object into a human-readable string with ordinal suffixes.
+     * Standardizes how multi-day event boundaries are presented in the user-facing console.
+     *
+     * @param date The {@code LocalDate} object to be formatted.
+     * @return The formatted string (e.g., "1st of January 2026").
+     */
     public static String formatDateWithOrdinal(LocalDate date) {
         String dayWithSuffix = getDayWithOrdinalSuffix(date.getDayOfMonth());
         return dayWithSuffix + " of " + date.format(DISPLAY_DATE_FORMAT);
     }
 
+    /**
+     * Translates a time-only object into a human-readable string.
+     * Standardizes how intraday event boundaries are presented in the user-facing console.
+     *
+     * @param time The {@code LocalTime} object to be formatted.
+     * @return The formatted string (e.g., "2:00pm").
+     */
     public static String formatTime(LocalTime time) {
         return time.format(DISPLAY_TIME_FORMAT).toLowerCase();
     }
 
+    /**
+     * Initializes a new event task and attempts to interpret its dual time constraints.
+     * Preserves the raw user input while parsing it into structured date objects for better UI formatting.
+     *
+     * @param description The core text detailing the nature of the event.
+     * @param start The raw string representing the event's starting boundary.
+     * @param end The raw string representing the event's concluding boundary.
+     */
     public Event(String description, String start, String end) {
         super(description);
         this.startDateTime = parseDateTime(start);

@@ -2,6 +2,11 @@ package cheriie.ui;
 
 import java.util.Scanner;
 
+/**
+ * Serves as the primary interface facade for all user interactions.
+ * Encapsulates both input gathering and output delegation, allowing the core application logic
+ * to communicate with the user without needing to manage raw Scanners or Display formatters directly.
+ */
 public class Ui {
     private static Scanner scanner = new Scanner(System.in);
 

@@ -6,6 +6,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a trackable task that must be completed by a specific time boundary.
+ * Extends the base Task class to support complex date and time parsing, allowing for flexible user input formats.
+ */
 public class Deadline extends Task {
 
     protected String by;
@@ -68,6 +72,14 @@ public class Deadline extends Task {
 
 
 
+    /**
+     * Initializes a new deadline task and attempts to interpret its time constraints.
+     * Preserves the raw user input while simultaneously trying to parse it
+     * into a structured date object for better UI formatting.
+     *
+     * @param description The core text detailing what the task entails.
+     * @param by The raw string representing the deadline boundary provided by the user.
+     */
     public Deadline(String description, String by) {
         super(description);
         this.originalBy = by;
@@ -77,6 +89,14 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Attempts to convert a raw string into a structured temporal object against predefined format arrays.
+     * Grants the application high flexibility, allowing users to input dates and times
+     * in whichever format they prefer without causing crashes.
+     *
+     * @param dateTimeStr The raw string to be parsed.
+     * @return A {@code ParsedDateTime} object if a format matches, or null if the string cannot be interpreted as a date/time.
+     */
     private ParsedDateTime parseDateTime(String dateTimeStr) {
         String parsingStr = dateTimeStr.toUpperCase();
         // try to parse as LocalDateTime
@@ -109,6 +129,13 @@ public class Deadline extends Task {
         return null; // if parsing fails
     }
 
+    /**
+     * Appends the appropriate English ordinal suffix (st, nd, rd, th) to a numeric day of the month.
+     * Enhances the UI display logic so dates read naturally (e.g., "1st" instead of "1").
+     *
+     * @param dayOfMonth The integer value of the day (1-31).
+     * @return The day formatted as a string with its ordinal suffix.
+     */
     private static String getDayWithOrdinalSuffix(int dayOfMonth) {
         if (dayOfMonth >= 11 && dayOfMonth <= 13) {
             return dayOfMonth + "th";
@@ -121,16 +148,37 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Translates a complete date and time object into a human-readable string with ordinal suffixes.
+     * Standardizes how complex deadlines are presented in the user-facing console.
+     *
+     * @param dateTime The {@code LocalDateTime} object to be formatted.
+     * @return The formatted string (e.g., "1st of January 2026, 2:00pm").
+     */
     public static String formatDateTimeWithOrdinal(LocalDateTime dateTime) {
         String dayWithSuffix = getDayWithOrdinalSuffix(dateTime.getDayOfMonth());
         return dayWithSuffix + " of " + dateTime.format(DISPLAY_DATE_FORMAT) + ", " + dateTime.format(DISPLAY_TIME_FORMAT).toLowerCase();
     }
 
+    /**
+     * Translates a date-only object into a human-readable string with ordinal suffixes.
+     * Standardizes how daily deadlines are presented in the user-facing console.
+     *
+     * @param date The {@code LocalDate} object to be formatted.
+     * @return The formatted string (e.g., "1st of January 2026").
+     */
     public static String formatDateWithOrdinal(LocalDate date) {
         String dayWithSuffix = getDayWithOrdinalSuffix(date.getDayOfMonth());
         return dayWithSuffix + " of " + date.format(DISPLAY_DATE_FORMAT);
     }
 
+    /**
+     * Translates a time-only object into a human-readable string.
+     * Standardizes how intraday deadlines are presented in the user-facing console.
+     *
+     * @param time The {@code LocalTime} object to be formatted.
+     * @return The formatted string (e.g., "2:00pm").
+     */
     public static String formatTime(LocalTime time) {
         return time.format(DISPLAY_TIME_FORMAT).toLowerCase();
     }
@@ -146,6 +194,11 @@ public class Deadline extends Task {
         return "D | " + getStatusForStorage() + " | " + description + " | " + originalBy;
     }
 
+    /**
+     * An additional wrapper class for Java's various temporal objects.
+     * Centralizes the formatting logic so the main class does not need to constantly check whether
+     * the user provided a full date-time, just a date, or just a time.
+     */
     private static class ParsedDateTime {
         private LocalDateTime dateTime; // both date and time
         private LocalDate date;         // only date
