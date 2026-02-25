@@ -1,4 +1,5 @@
-# Cheriie User Guide
+# Cheriie User Guide #
+
 Cheriie is a personal task management chatbot designed to help you manage your daily tasks
 such as your todos, deadlines, and events via a simple application installed in the Command Line Interface (˶ᵔ ᵕ ᵔ˶) !
 ---
@@ -38,7 +39,7 @@ respective system [here](https://www.oracle.com/java/technologies/javase/jdk17-a
    `java -jar cheriie.jar`
 7. After a few seconds, the application will launch in your terminal. You should see the user interface output
    for Cheriie as shown below:\
-   ![launch](launch.png)
+   <img width="640" height="222" alt="launch" src="https://github.com/user-attachments/assets/bc8fb90f-b83d-4346-867d-69611053f74e" />\
 8. Type the commands into the terminal and press **Enter** to execute the command.
 ---
 
