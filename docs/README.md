@@ -1,7 +1,8 @@
 # Cheriie User Guide #
 
 Cheriie is a personal task management chatbot designed to help you manage your daily tasks
-such as your todos, deadlines, and events via a simple application installed in the Command Line Interface (˶ᵔ ᵕ ᵔ˶) !
+such as your todos, deadlines, and events via a simple application installed in the Command Line Interface (˶ᵔ ᵕ ᵔ˶)!
+
 ---
 
 ## Table of Contents
@@ -20,6 +21,7 @@ such as your todos, deadlines, and events via a simple application installed in 
   - [Saving your data](#saving-your-data)
 - [Editing the Data File](#editing-the-data-file)
 - [Command Summary](#command-summary)
+
 ---
 
 ## Quick Start
@@ -41,9 +43,11 @@ respective system [here](https://www.oracle.com/java/technologies/javase/jdk17-a
 for Cheriie as shown below:\
 <img width="640" height="222" alt="launch" src="https://github.com/user-attachments/assets/bc8fb90f-b83d-4346-867d-69611053f74e" />\
 8. Type the commands into the terminal and press **Enter** to execute the command.
+
 ---
 
 ## Features
+
 > [!NOTE]
 > ‼️ **Notes about the command format**:
 > - Words in **UPPER_CASE** are placeholders to be supplied by you, the user.
@@ -85,6 +89,7 @@ Adds a task with a specific deadline. Great for time-sensitive tasks!
 Adds a task named *“submit cs2113 assignment”* with a deadline of 6th March 2026 at 11:59PM to the list.
 - `deadline feed cat /by 2026-03-01 12pm`
   Adds a task named *“feed cat”* with a deadline of 1st March 2026 at 12:00PM to the list.
+
 >[!TIP]
 > Ensure that the date and time follow the accepted formats, or they will be treated as strings. 
 > Refer to the notes about the command format above for valid date and time formats.
@@ -97,6 +102,7 @@ Adds a task with both a start and end time. Ideal for scheduling events like gro
 **Examples**:
 - `event cs2113 project call /from 06/03/2026 15:30 /to 06/03/2026 16:30`
   Adds a task named *“cs2113 project call”* event happening from 6th March 2026 at 3:30PM to 6th March 2026 4:30PM to the list.
+
 >[!TIP]
 > Ensure that the date and time follow the accepted formats, or they will be treated as strings.
 > Refer to the notes about the command format above for valid date and time formats.
@@ -170,11 +176,14 @@ Cheriie automatically saves your tasks to the data/cheriie.txt file after any ch
 ## Editing the Data File
 Cheriie automatically saves your task data in a text file located at `./data/aether.txt`, relative to the directory where you run the program. 
 Advanced users can update their tasks by directly editing this file.
+
 > [!WARNING]
 > Be cautious when editing the file directly, as improper formatting may cause errors or data loss when the application is next launched.
 
 ---
+
 ## Command Summary
+
 | Action       | Format                                                      | Example                                           |
 |--------------|-------------------------------------------------------------|---------------------------------------------------|
 | **Help**     | `help`                                                      | —                                                 |
