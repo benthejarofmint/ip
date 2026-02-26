@@ -168,13 +168,14 @@ Cheriie automatically saves your tasks to the data/cheriie.txt file after any ch
 
 --- 
 ## Editing the Data File
-Cheriie automatically saves your task data in a text file located at `./data/aether.txt`, relative to the directory where you run the program.
+Cheriie automatically saves your task data in a text file located at `./data/cheriie.txt`, relative to the directory where you run the program.
 Advanced users can update their tasks by directly editing this file.
 > [!WARNING]
 > Be cautious when editing the file directly, as improper formatting may cause errors or data loss when the application is next launched.
 
 ---
 ## Command Summary
+
 | Action       | Format                                                      | Example                                           |
 |--------------|-------------------------------------------------------------|---------------------------------------------------|
 | **Help**     | `help`                                                      | —                                                 |
