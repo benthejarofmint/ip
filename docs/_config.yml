@@ -1,0 +1,10 @@
+# set the markdown engine
+markdown: kramdown
+
+# configure kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# set github standard theme
+theme: jekyll-theme-primer
